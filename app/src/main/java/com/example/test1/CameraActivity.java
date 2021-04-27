@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.os.Trace;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Size;
@@ -64,7 +65,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final Logger LOGGER = new Logger();
 
   private static final int PERMISSIONS_REQUEST = 1;
-
+  private long firstAppearanceTimeMs=-1;//第一次超过80%的时间
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   protected int previewWidth = 0;
   protected int previewHeight = 0;
@@ -525,10 +526,20 @@ public abstract class CameraActivity extends AppCompatActivity
           recognitionValueTextView.setText(
                   String.format("%.2f", (100 * recognition.getConfidence())) + "%");//识别的值
           float recognition_level=recognition.getConfidence();
-          if(recognition_level>0.7){
-            ToastUtil.showToast(this,0,"准确度大于70%");
+          String recognition_Title=recognition.getTitle();
+          if(firstAppearanceTimeMs==-1&&recognition_Title.equals("roses")&&recognition_level>0.8){//如果还没有被识别开始 并且是玫瑰  且大于0.8
+            firstAppearanceTimeMs= SystemClock.uptimeMillis();
           }
-
+          else {//如果识别已经开始了
+            if(recognition_Title.equals("roses")&&recognition_level>0.8){//如果是玫瑰并且准确率大于80%检测是否超过了5000ms 即5秒
+              long nowtime=SystemClock.uptimeMillis()-firstAppearanceTimeMs;
+              if(nowtime>=5000){//如果超过五秒Toast出来 之后可以换成记录到文件
+                ToastUtil.showToast(this,0,"是玫瑰！超过5秒钟hahah！");
+              }
+            }else{//如果不是玫瑰 或者准确率小于80%
+              firstAppearanceTimeMs=-1;//重置识别
+            }
+          }
         }
       }
 

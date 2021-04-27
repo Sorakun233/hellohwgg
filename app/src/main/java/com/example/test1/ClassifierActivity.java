@@ -38,6 +38,7 @@ public class ClassifierActivity extends com.example.test1.CameraActivity impleme
   private static final float TEXT_SIZE_DIP = 10;
   private Bitmap rgbFrameBitmap = null;
   private long lastProcessingTimeMs;
+
   private Integer sensorOrientation;
   private Classifier classifier;
   private BorderedText borderedText;
@@ -91,11 +92,9 @@ public class ClassifierActivity extends com.example.test1.CameraActivity impleme
               public void run() {
                 if (classifier != null) {
                   final long startTime = SystemClock.uptimeMillis();
-                  final List<Classifier.Recognition> results =
-                          classifier.recognizeImage(rgbFrameBitmap, sensorOrientation);
+                  final List<Classifier.Recognition> results = classifier.recognizeImage(rgbFrameBitmap, sensorOrientation);
                   lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
                   LOGGER.v("Detect: %s", results);
-
                   runOnUiThread(
                           new Runnable() {
                             @Override
