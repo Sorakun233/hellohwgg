@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -156,7 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case NONE:
 
                 if (view == buttonLeft) {
-
+                    Intent intent =(Intent) new Intent(this,ClassifierActivity.class);
+                    startActivity(intent);//进入系统
                 } else if (view == buttonRight) {
                     formView.animate().translationY(0).alpha(1).setDuration(500).start();//alpha是透明度
                     inputType = InputType.LOGIN;
@@ -169,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (view == buttonLeft) {
                     //确认登录之后的操作
-//                    formView.animate().translationY(-1 * delta).alpha(1).setDuration(500).start();//只有登录成功才隐藏
                     String usern=formView.edit1.getText().toString();//用户名  我这里设置初始管理员用户名和密码是 admin 123456
                     String passw=formView.edit2.getText().toString();//密码
                     if(usern.equals("admin") && passw.equals("123456"))//登录成功
